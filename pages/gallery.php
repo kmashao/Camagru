@@ -40,11 +40,11 @@ require ("./sessionRedirect.php");
 		$imageName = $user->test_input($_GET['imageData']);
 		$imageIdArr = $user->getImageId($username, $imageName);
 		$imageID = $imageIdArr['image_id']; 
-		if($user->deleteImage($username,$imageID, $imageName)){
-			$user->redirect('gallery.php');
+		if($user->deleteImage($username,$imageID, $imageName) && $imageID != 0){
+			//$user->redirect('gallery.php');
 			$deleteMsg = "Image successfully deleted";
 		}else{
-			$deleteMsg = "Couldn't delete image or image doesn't exist";
+			$deleteMsg = null;
 		}
 	}
 ?>
@@ -70,11 +70,11 @@ require ("./sessionRedirect.php");
 			<div class="container">
 			<?php
 				if(isset($deleteMsg)){
-					echo"<div class='modal is-active is-clipped'>
+					echo"<div class='modal'>
 					<div class='modal-background'></div>
 					<div class='modal-content'>
 					  <div class='box'>
-						<p class='text is-2 has-text-primary'>$picAvailabity</p>
+						<p class='text is-2 has-text-primary'>" . $deleteMsg. "</p>
 					  </div>
 					</div>
 					<button class='modal-close is-large' aria-label='close'></button>
@@ -121,7 +121,7 @@ require ("./sessionRedirect.php");
 										</figure>
 									</div>
 									<div class="card-content">
-										<form action="gallery.php" name="delete-image" method="GET">
+										<form name="delete-image" method="GET">
                               				<input type="hidden" id="image" name="imageData" value="<?php echo $pic['image_name'];?>">
 											<button class="button is-info is-inverted" name="delete-btn" value=OK>Delete Image</button>
 										</form>
