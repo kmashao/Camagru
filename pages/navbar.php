@@ -26,17 +26,21 @@
 		</div>
 
 		<div class="navbar-end">
-			<div class="navbar-item">
-				<div class="buttons">
 
 					<?php if(isset($username))
-    	            	echo "<a class='button is-light' href='logout.php?logout=true'>Log out</a>";
+						echo "<a class='navbar-item has-text-grey' href='logout.php?logout=true'>
+						<span class='icon'>
+      						<i class='fas fa-sign-out-alt'></i>
+						</span>
+						<span>Log out</span></a>";
     	          	else 
-    	           		echo "<a class='button is-primary' href='../index.php'> <strong>Sign up</strong></a>";
+						echo "<a class='navbar-item has-text-grey' href='../index.php'>
+						<span class='icon'>
+							<i class='fas fa-sign-in-alt'></i>
+					 	</span>
+						   <span><strong>Sign up</strong></span></a>";
     	    		?>
 
-				</div>
-			</div>
 		</div>
 	</div>
 </nav>

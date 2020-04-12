@@ -51,6 +51,12 @@ html, body{
 	padding: 10vw;
 }
 
+#prof-form-div{
+	margin-left: 0;
+	overflow: hidden;
+	width: 80%;
+}
+
 #registration-form{
 	width: 85vw;
 	padding: 10%;
@@ -63,7 +69,7 @@ html, body{
 } */
 
 #image-grid{
-	width:200;
+	width:100;
 }
 
 #navnav{
@@ -76,13 +82,15 @@ html, body{
 } */
 
 #video-container{
-width: 70vw;
+width: 65vw;
 height:50vh;
+
 /* padding-left: 15vw;
 padding-right: 15vw; */
 /* margin:0 auto; */
 /* position: relative; */
 }
+
 
 #video{
 	min-width: 70%;
@@ -110,4 +118,18 @@ padding-right: 15vw; */
 
 #image-upload{
 display: none;
+}
+
+li{
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.pagination{
+	padding-top: 10px;
+}
+#pagination{
+	width: 94vw;
+	padding: 5px;
+	margin: auto;
 }

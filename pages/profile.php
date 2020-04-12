@@ -65,8 +65,8 @@ $conn = getConn();
 			<section name="user-info">
 				<div id="profile-form" class="container">
 					<div class="tile is-ancestor">
-						<div class="tile is-parent">
-							<div class="tile is-child">
+						<div id="prof-form-div" class="tile is-parent">
+							<div class="tile is-child is-4">
 
 									<div class="field is grouped">
 										<label class="label">Username :</label>
@@ -89,8 +89,8 @@ $conn = getConn();
 									</div>
 							</div>
 						</div>
-						<div class="tile is-parent">
-							<div class="tile is-6 is-child">
+						<div id="prof-form-div"class="tile is-parent">
+							<div class="tile is-child">
 								<form action="./profile.php" method="post">
 									<div class="container">
 										<div class="field">
@@ -143,8 +143,8 @@ $conn = getConn();
 												</div>
 											</div>
 
-											<div style="margin: auto;">
-												<button class="button is-primary is-light" name="submit-btn">
+											<div>
+												<button class="button is-primary is-light " name="submit-btn">
 													Submit
 												</button>
 											</div>

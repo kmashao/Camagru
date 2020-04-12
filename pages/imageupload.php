@@ -203,7 +203,7 @@ if (isset($_POST['save-btn']))
 				<label class="subtitle"> Time to take a photo say cheese</label>
 				<div id="vid-divs">
 
-					<div id="vid-container" class="container"style="text-align:center;">
+					<div id="vid-container" class="container" style="margin-right: 15vw;margin-left: auto;">
 						<video  autoplay id="video"></video>
 						<canvas id="vid-canvas"></canvas>
 						<script src="../js/mediaupload.js"></script>
@@ -213,18 +213,18 @@ if (isset($_POST['save-btn']))
 					<p class="control">
 						<div class="field is-grouped">
 							<p class="control">
-								<button class="button is-link is-light" id="vid-take">Take picture</button>
+								<button class="button is-link is-light is-small" id="vid-take">Take picture</button>
 							</p>
 							<p class="control">
-								<button class="button is-link is-light" id="vid-retake"
+								<button class="button is-warning is-light is-small" id="vid-retake"
 									onclick="retake()">Not
 									satisfied</button>
 							</p>
 							<p class="control">
 								<form name="cam-image" method="post">
 									<input type="hidden" id="vid-image" name="image_data">
-									<button class="button is-primary is-light" type="submit" id="save-btn"
-										name="save-btn" value="OK">Save</button>
+									<button class="button is-primary is-light is-small" type="submit" id="save-btn"
+										name="save-btn" value="OK" >Save</button>
 								</form>
 							</p>
 						</div>
@@ -245,12 +245,12 @@ if (isset($_POST['save-btn']))
 									'$picAvailabity'
 								 </div>";
 					?>
-					<div class="columns is-multiline is-one-quarter-mobile">
+					<div class="columns is-mobile is-multiline">
 						<?php
 						foreach($userPics as $pic)
                 	        {
                 	            ?>
-						<div class="column is-3">
+						<div class="column is-one-quarter-desktop is-one-quarter-tablet is-half-mobile">
 							<div class="card" id="gallery-pics">
 								<div class="container">
 									<div class="card-image">

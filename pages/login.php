@@ -54,7 +54,7 @@ require_once ("../config/userclass.php");
             </div>
         </div>
     </section>
-    <div style="width: 70%; overflow: hidden;">
+    <div class="container">
         <form action="login.php" method="post">
         <div style="margin: auto; padding: 100px">
             <div class="field">
@@ -82,7 +82,7 @@ require_once ("../config/userclass.php");
             </div>
 
             <div class="control">
-                <button class="button is-link" name="login-btn"></> Login</button>
+                <button class="button is-link is-light" name="login-btn"></> Login</button>
             </div>
             <br>
             <div class="field is-grouped">

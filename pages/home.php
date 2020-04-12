@@ -25,7 +25,7 @@ require ("./sessionRedirect.php");
   <?php include_once "navbar.php" ?>
   <div id="body-container" class="container is-fullhd">
     <section class="section is-fullwidth">
-
+      
     </section>
     <div class="push"></div>
   </div>
