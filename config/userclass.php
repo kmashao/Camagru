@@ -22,18 +22,18 @@ class User{
     }
 
     //register a user
-    public function regUser($firstname, $lastname, $userName, $email, $password){
+    public function regUser($firstname, $lastname, $userName, $email, $password, $hash){
         try{
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $this->query("INSERT INTO users(firstname, lastname, username, email, `password`)
-                Values(:firstname, :lastname, :username, :email, :password)");
+            $stmt = $this->query("INSERT INTO users(firstname, lastname, username, email, `password`, token)
+                Values(:firstname, :lastname, :username, :email, :password, :token)");
             $stmt->bindParam(":firstname", $firstname, PDO::PARAM_STR);
             $stmt->bindParam(":lastname", $lastname, PDO::PARAM_STR);
             $stmt->bindParam(":username", $userName, PDO::PARAM_STR);
             $stmt->bindParam(":email", $email, PDO::PARAM_STR);
             $stmt->bindParam(":password", $hashed_password, PDO::PARAM_STR);
-
+            $stmt->bindParam(":token", $hash, PDO::PARAM_STR);
             $stmt->execute();
 
             return $stmt;
@@ -43,10 +43,10 @@ class User{
         }
     }
     //verify user email
-    public function verifyEmail($userName, $email){
+    public function verifyEmail($userName, $hash){
         try{
-            $stmt = $this->query("UPDATE users SET verified = 'Yes' WHERE username=:username");
-            $stmt->execute(array('username'=>$userName));
+            $stmt = $this->query("UPDATE users SET verified = 'Yes' WHERE username=:username AND token=:token");
+            $stmt->execute(array('username'=>$userName, 'token'=>$hash));
             return true;
         }
         catch(PDOException $exception){

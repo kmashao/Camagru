@@ -71,6 +71,7 @@ catch(PDOException $e) {
     `password` VARCHAR(100) NOT NULL,
     notifications VARCHAR(3) DEFAULT 'Yes',
     verified VARCHAR(3) DEFAULT 'NO',
+    `hash` VARCHAR(32) NOT NULL,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );";
 

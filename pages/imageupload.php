@@ -203,7 +203,7 @@ if (isset($_POST['save-btn']))
 				<label class="subtitle"> Time to take a photo say cheese</label>
 				<div id="vid-divs">
 
-					<div id="vid-container" class="container" style="margin-right: 15vw;margin-left: auto;">
+					<div id="vid-container" class="container" style="margin-right: auto;margin-left: auto;">
 						<video  autoplay id="video"></video>
 						<canvas id="vid-canvas"></canvas>
 						<script src="../js/mediaupload.js"></script>

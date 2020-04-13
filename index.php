@@ -60,19 +60,20 @@ $user = new User();
 		            $userNameError = "Username already taken!";
 	            }
 	            else if($row['email'] == $email) {
-		            $emailError = "Email is already taken!";
+		            $emailError = "Email is already used!";
 	            }
 	        }
 	        else
 	        {
-		        if (isset($userNameError) || isset($emailError))
-			        $user->redirect("index.php");
-		        if($user->regUser($firstName, $lastName, $userName, $email, $password))
+		        if (isset($userNameError) || isset($emailError)){
+                    $user->redirect("index.php");
+                }
+                $hash = md5( rand(0,1000) );
+		        if($user->regUser($firstName, $lastName, $userName, $email, $password, $hash))
 		        {
-			        $hash = hash("whirlpool", $email);
                     $subject = "Camagru account confirmation";
                     $headers = 'From:noreply@camagru.com' . "\r\n";
-			        $link = "http://localhost:8080/Camagru/pages/verifyUser.php?id=$userName&key=$hash";
+			        $link = "http://localhost:8080/Camagru/pages/verifyUser.php?id=" .$userName. "&key=" .$hash;
 			        $message = " 
                     Thanks for signing up!
                     Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.

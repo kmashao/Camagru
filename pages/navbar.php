@@ -27,7 +27,7 @@
 
 		<div class="navbar-end">
 
-					<?php if(isset($username))
+					<?php if(isset($username) && ($username != 'guest'))
 						echo "<a class='navbar-item has-text-grey' href='logout.php?logout=true'>
 						<span class='icon'>
       						<i class='fas fa-sign-out-alt'></i>

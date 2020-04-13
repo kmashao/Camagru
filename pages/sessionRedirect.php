@@ -9,5 +9,5 @@ $session = new User();
 
 if (!$session->loggedIn()) {
 	// if session is not set it redirects to login page
-	$session->redirect('./login.php');
+	$session->redirect('login.php');
 }

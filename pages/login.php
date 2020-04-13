@@ -3,7 +3,6 @@ session_start();
 require_once ("../config/userclass.php");
 
     $user = new User();
-    $username = $_SESSION['user_session'];
 
     if($user->loggedIn())
     {
@@ -25,7 +24,7 @@ require_once ("../config/userclass.php");
 	    else if($user->login($username, $password) == true)
 	    {
 		    $_SESSION['user_session'] = $username;
-		    $user->redirect('./home.php');
+		    $user->redirect('home.php');
 	    }
 	    else
 	    {

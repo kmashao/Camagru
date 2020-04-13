@@ -1,7 +1,7 @@
 //just a fancy screen for messages
 document.addEventListener('DOMContentLoaded', () => {
 
-	var modal = document.querySelector('.modal'); // assuming you have only 1
+	var modal = document.querySelector('.modal');
 	var html = document.querySelector('html');
 	modal.classList.add('is-active');
 	html.classList.add('is-clipped');

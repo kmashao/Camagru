@@ -60,7 +60,6 @@ require ("./sessionRedirect.php");
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
 	<link rel="stylesheet" href="../css/styles.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-	<script src="../js/notificationHide.js"></script>
 </head>
 
 <body class="has-navbar-fixed-top">
@@ -102,7 +101,7 @@ require ("./sessionRedirect.php");
 					<?php
 						if(isset($picAvailabity))
 							echo "<div class='notification is-primary is-light' style='width:80vw;'>
-									<button class='delete'></button>
+									
 									'$picAvailabity'
 								 </div>";
 					?>
@@ -141,7 +140,7 @@ require ("./sessionRedirect.php");
 
 						<ul class="pagination-list">
 							<li>
-								<a class="button is-rounded is-primary is-outlined is-small" href="?pageno=1"
+								<a class="button is-rounded is-primary is-outlined is-small" href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno=1' ?>"
 									aria-label="first Page">First page</a>
 							</li>
 							<li>
@@ -162,7 +161,7 @@ require ("./sessionRedirect.php");
 
 							<li>
 								<a class="button is-rounded is-primary is-outlined is-small"
-									href="?pageno=<?php echo $totalPages ?>" aria-label="last Page">Last Page
+									href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno='.$totalPages ?>" aria-label="last Page">Last Page
 								</a>
 							</li>
 						</ul>
@@ -173,7 +172,7 @@ require ("./sessionRedirect.php");
 			<div class="push"></div>
 		</section>
 	</div>
-	<?php var_dump($deleteMsg);?>
+	<?php var_dump($totalImages);?>
 	<?php var_dump($imageID); ?>
 	<?php include_once "footer.php"?>
 </body>
