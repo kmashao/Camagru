@@ -136,7 +136,7 @@ class User{
     }
 
     //get image id
-    public function getImageId($username, $imageName){
+    public function getImageId($imageName){
         try{
             $stmt = $this->query("SELECT image_id FROM images WHERE username=:username AND image_name=:imageName");
             $stmt->bindParam(":username", $username, PDO::PARAM_STR);

@@ -38,7 +38,7 @@ require ("./sessionRedirect.php");
 	{	
 		$imageID =0;
 		$imageName = $user->test_input($_GET['imageData']);
-		$imageIdArr = $user->getImageId($username, $imageName);
+		$imageIdArr = $user->getImageId($imageName);
 		$imageID = $imageIdArr['image_id']; 
 		if($user->deleteImage($username,$imageID, $imageName) && $imageID != 0){
 			//$user->redirect('gallery.php');

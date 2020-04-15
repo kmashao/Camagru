@@ -16,19 +16,85 @@ require ("./sessionRedirect.php");
     $offset = ($pageno - 1) * $imagesPerPage;
   
     $query = $user->query("SELECT image_name FROM images");
-      $query->bindParam(":username", $username, PDO::PARAM_STR);
       $query->execute();
       $totalImages = $query->rowCount();
     $totalPages = ceil($totalImages / $imagesPerPage);
     
-    //checks and retreives images the user has  uploaded
-    $stmt = $user->query("SELECT image_name FROM images WHERE username=:username
+    //retreives images users have  uploaded
+    $stmt = $user->query("SELECT * FROM images
               ORDER BY upload_date DESC LIMIT $offset, $imagesPerPage");
-    $stmt->bindparam(":username",$username, PDO::PARAM_STR);
+   // $stmt->bindparam(":username",$username, PDO::PARAM_STR);
     $stmt->execute();
     $userPics = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if(empty($userPics)){
-      $picAvailabity = "Be the first to post";
+      $picAvailabity = "Be the first to post, upload an image";
+    }
+
+    //fetch all comments
+    // $imageId = $user->getImageId($_GET['image']);
+    // $stmt = $user->query("SELECT * FROM comments WHERE image_id=:imageId ORDER BY comment_date");
+    // $stmt->bindParam("imageId",$imageId, PDO::PARAM_STR);
+    // $stmt->execute();
+    // $allComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+    // var_dump($allComments);
+    // var_dump($imageId);
+    // die();
+
+    //Like handler
+    if(isset($_GET['like-btn'])){
+        $stmt = $user->query("SELECT * FROM images WHERE image_name=:pic_name");
+        $stmt->bindParam(":pic_name", $_GET['image'], PDO::PARAM_STR);
+        $stmt->execute();
+        $images = $stmt->fetchAll();
+        $image = $images[0];
+
+        $stmt = $user->query("SELECT * FROM likes WHERE image_id=:imageId AND username=:username");
+        $stmt->bindParam("imageId",$image['image_id'], PDO::PARAM_STR);
+        $stmt->bindParam("username",$username, PDO::PARAM_STR);
+        $stmt->execute();
+        //check if user already liked
+        if($stmt->rowCount() < 1){
+          $stmt = $user->query("INSERT INTO likes(image_id, username)
+              VALUES(:image_id, :username)");
+          $stmt->bindParam(":image_id",$image['image_id'], PDO::PARAM_STR);
+          $stmt->bindParam(":username",$username, PDO::PARAM_STR);
+          $stmt->execute();
+        }else{
+          $stmt = $user->query("DELETE FROM likes WHERE image_id=:imageId AND username=:userName");
+          $stmt->bindParam(":imageId",$image['image_id'], PDO::PARAM_STR);
+          $stmt->bindParam(":userName",$username, PDO::PARAM_STR);
+          $stmt->execute();
+        }
+    }
+
+    //comment handler
+    if(isset($_GET['comment-btn'])){
+      $comment = $user->test_input($_GET['comment']);
+
+      if(empty($comment)){
+        $commentErr = "comment cant be empty";
+      }
+      $stmt = $user->query("SELECT * FROM images WHERE image_name=:pic_name");
+      $stmt->bindParam(":pic_name", $_GET['image'], PDO::PARAM_STR);
+      $stmt->execute();
+      $images = $stmt->fetchAll();
+      $image = $images[0];
+
+      //fetch all comments
+      // $stmt = $user->query("SELECT * FROM comments WHERE image_id=:imageId ORDER BY comment_date");
+      // $stmt->bindParam("imageId",$image['image_id'], PDO::PARAM_STR);
+      // $stmt->execute();
+      // $allComments = $stmt->fetchAll();
+      
+        //add comment to db
+        $stmt = $user->query("INSERT INTO comments(image_id, username, comment)
+              VALUES(:image_id, :username, :comment)");
+        $stmt->bindParam(":image_id",$image['image_id'], PDO::PARAM_STR);
+        $stmt->bindParam(":username",$username, PDO::PARAM_STR);
+        $stmt->bindParam(":comment", $comment, PDO::PARAM_STR);
+        $stmt->execute();
     }
   
 ?>
@@ -65,28 +131,55 @@ require ("./sessionRedirect.php");
 							foreach($userPics as $pic)
                 	        {
                 	            ?>
-            <div class="column is-two-thirds">
+            <div class="column is-full">
               <div class="card">
                 <div class="container is-fluid">
                   <div class="card-image">
-                    <label><?php echo $username ?></label>
+                    <label><?php echo $pic['username'] ?></label>
                     <figure id="card-image" class="image is-1by1 ">
                       <?php echo "<img id='square-img' src='../media/uploads/". $pic['image_name'] . "'>";?>
                     </figure>
                   </div>
                   <div class="card-content">
                     <form name="likes-comments" method="GET">
+                    <input type="hidden" name="image" value="<?php echo $pic['image_name'];?>">
                       <article class="media">
+                        <div class="media-content">
+                                  <?php
+                                  $stmt = $user->query("SELECT * FROM comments WHERE image_id=:pic_id"); 
+                                  $stmt->bindParam(":pic_id", $pic['image_id'], PDO::PARAM_STR);
+                                  $stmt->execute();
+                                  $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                  foreach($comments as $comm) {
+                                  ?>
+                          <p>
+                              <strong><?php echo $comm['username']; ?></strong>
+                              <br />
+                              <?php echo $comm['comment']; }?>
+                          </p>
+                        </div>
                         <div class="media-content">
                           <div class="field">
                             <p class="control">
-                              <textarea class="textarea" placeholder="Add a comment..."></textarea>
+                              <textarea class="textarea" name="comment" placeholder="Add a comment..."></textarea>
                             </p>
                           </div>
                           <nav class="level">
                             <div class="level-left">
                               <div class="level-item">
-                                <a class="button is-info is-light">comment</a>
+                                <button name="comment-btn" class="button is-small is-info is-light" value="OK">comment</button>
+                              </div>
+                              <div class="level-item">
+                                <button name="like-btn" class="button is-small is-info is-light" value="1">
+                                  <span style="padding-right:10px;"class="icon is-small">
+                                    <i class="fas fa-heart"></i>
+                                  </span>  like <?php
+                                  $query = $user->query("SELECT * FROM likes WHERE image_id=:pic_id"); 
+                                  $query->bindParam(":pic_id", $pic['image_id'], PDO::PARAM_STR);
+                                  $query->execute();
+                                  echo $query->rowCount();
+                                     ?>
+                                </button>
                               </div>
                             </div>
                           </nav>
@@ -109,7 +202,7 @@ require ("./sessionRedirect.php");
 
             <ul class="pagination-list">
               <li>
-                <a class="button is-rounded is-primary is-outlined is-small"
+                <a class="button is-rounded is-primary is-outlined is-small is-left"
                   href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno=1' ?>" aria-label="first Page">First
                   page</a>
               </li>
@@ -129,7 +222,7 @@ require ("./sessionRedirect.php");
 
 
               <li>
-                <a class="button is-rounded is-primary is-outlined is-small"
+                <a class="button is-rounded is-primary is-outlined is-small -is-right"
                   href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno='.$totalPages ?>"
                   aria-label="last Page">Last Page
                 </a>
@@ -141,7 +234,7 @@ require ("./sessionRedirect.php");
     </section>
     <div class="push"></div>
   </div>
-  <?php var_dump($totalImages)?>
+  <?php var_dump($image)?>
   <?php include "footer.php"?>
 </body>
 
