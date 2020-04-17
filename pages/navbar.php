@@ -4,6 +4,9 @@
 		<a class="navbar-item" href="home.php">
 			<img src="../media/logo/Logo.png" alt="Camagru Logo" width="70" style="max-height:100%;">
 		</a>
+		<label style="padding-top:22px;">
+			<?php echo "$username" ?>
+		</label>
 
 		<a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
 			<span aria-hidden="true"></span>

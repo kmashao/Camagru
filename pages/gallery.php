@@ -33,15 +33,15 @@ require ("./sessionRedirect.php");
 		$picAvailabity = "You currently have no pictures";
 	}
 
-	//Deleting images frim database
+	//Deleting images from database
 	if(isset($_GET['delete-btn']) && !empty($_GET['imageData']))
 	{	
-		$imageID =0;
+		$imageID = 0;
 		$imageName = $user->test_input($_GET['imageData']);
 		$imageIdArr = $user->getImageId($imageName);
 		$imageID = $imageIdArr['image_id']; 
-		if($user->deleteImage($username,$imageID, $imageName) && $imageID != 0){
-			//$user->redirect('gallery.php');
+		
+		if($user->deleteImage($username,$imageID, $imageName) && $imageID){
 			$deleteMsg = "Image successfully deleted";
 		}else{
 			$deleteMsg = null;
@@ -120,9 +120,9 @@ require ("./sessionRedirect.php");
 										</figure>
 									</div>
 									<div class="card-content">
-										<form name="delete-image" method="GET">
+										<form action="<?php echo $_SERVER['PHP_SELF']?>" name="delete-image" method="GET">
                               				<input type="hidden" id="image" name="imageData" value="<?php echo $pic['image_name'];?>">
-											<button class="button is-info is-inverted" name="delete-btn" value=OK>Delete Image</button>
+											<button type="submit" class="button is-info is-inverted" name="delete-btn" value=OK>Delete Image</button>
 										</form>
 									</div>
 								</div>
@@ -140,7 +140,7 @@ require ("./sessionRedirect.php");
 
 						<ul class="pagination-list">
 							<li>
-								<a class="button is-rounded is-primary is-outlined is-small" href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno=1' ?>"
+								<a class="button is-rounded is-primary is-outlined is-small" href="<?php if($totalImages == 0) { echo '#';} else echo '?pageno=1' ?>"
 									aria-label="first Page">First page</a>
 							</li>
 							<li>
@@ -161,7 +161,7 @@ require ("./sessionRedirect.php");
 
 							<li>
 								<a class="button is-rounded is-primary is-outlined is-small"
-									href="<?php if(totalImages == 0) { echo '#';} else echo '?pageno='.$totalPages ?>" aria-label="last Page">Last Page
+									href="<?php if($totalImages == 0) { echo '#';} else echo '?pageno='.$totalPages ?>" aria-label="last Page">Last Page
 								</a>
 							</li>
 						</ul>
@@ -172,8 +172,6 @@ require ("./sessionRedirect.php");
 			<div class="push"></div>
 		</section>
 	</div>
-	<?php var_dump($totalImages);?>
-	<?php var_dump($imageID); ?>
 	<?php include_once "footer.php"?>
 </body>
 
