@@ -228,7 +228,6 @@ require ("./sessionRedirect.php");
     </section>
     <div class="push"></div>
   </div>
-  <?php var_dump($image)?>
   <?php include "footer.php"?>
 </body>
 
