@@ -9,6 +9,11 @@ require_once ("../config/userclass.php");
         $user->redirect("home.php");
     }
 
+    if($_GET['user'] == "guest"){
+        $_SESSION['user_session'] = $user->test_input($_GET['user']);
+        $user->redirect('home.php');
+    }
+
     if(isset($_POST['login-btn'])){
 
         $username = $user->test_input($_POST['userName']);
@@ -43,7 +48,6 @@ require_once ("../config/userclass.php");
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 <body>
-
     <section class="hero is-primary is-bold">
         <div class="hero-body">
             <div class="container">
@@ -89,7 +93,10 @@ require_once ("../config/userclass.php");
             </div>
             <br>
             <div class="field is-grouped">
-                <p>Don't Have an account?</p> <a href="../index.php" style="padding-left: 10px">  Register Here</a>
+                <p>Don't Have an account?</p>
+                <a href="../index.php" style="padding-left: 10px; padding-right: 10px;">Register Here</a>
+                <p>or just</p>
+                <a href='login.php?user=guest' style="padding-left: 10px">Login as a guest</a>
             </div>
         </div>
 ; 

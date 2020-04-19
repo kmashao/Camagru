@@ -6,6 +6,12 @@ require ("./sessionRedirect.php");
     $user = new User();
     $username = $_SESSION['user_session'];
 
+    if($_GET['logout'] == "true")
+    {
+      $user->logOut();
+      $user->redirect('../index.php');
+    }
+
     if (isset($_GET['pageno'])) {
       $pageno = $_GET['pageno'];
     } else {
@@ -30,9 +36,9 @@ require ("./sessionRedirect.php");
     }
 
     //like handler
-    if(isset($_GET['like-btn'])){
+    if(isset($_POST['like-btn'])){
         $stmt = $user->query("SELECT * FROM images WHERE image_name=:pic_name");
-        $stmt->bindParam(":pic_name", $_GET['image'], PDO::PARAM_STR);
+        $stmt->bindParam(":pic_name", $_POST['image'], PDO::PARAM_STR);
         $stmt->execute();
         $images = $stmt->fetchAll();
         $image = $images[0];
@@ -57,14 +63,14 @@ require ("./sessionRedirect.php");
     }
 
     //comment handler
-    if(isset($_GET['comment-btn'])){
+    if(isset($_POST['comment-btn'])){
       $comment = $user->test_input($_GET['comment']);
 
       if(empty($comment)){
         $commentErr = "comment cant be empty";
       }
       $stmt = $user->query("SELECT * FROM images WHERE image_name=:pic_name");
-      $stmt->bindParam(":pic_name", $_GET['image'], PDO::PARAM_STR);
+      $stmt->bindParam(":pic_name", $_POST['image'], PDO::PARAM_STR);
       $stmt->execute();
       $images = $stmt->fetchAll();
       $image = $images[0];
@@ -135,13 +141,14 @@ require ("./sessionRedirect.php");
                                   foreach($comments as $comm) {
                                   ?>
                         <p>
-                          <strong><?php echo $comm['username']; ?></strong>
+                          <strong><?php echo $comm['username']; ?>:</strong>
                           <br />
-                          <?php echo $comm['comment']; }?>
+                          <p style="padding-left:10px;"><?php echo $comm['comment']; }?></p>
                         </p>
                       </div>
                     </article>
-                    <form name="likes-comments" action="home.php" method="GET">
+                    <form name="likes-comments" action="home.php" method="post"
+                    <?php if($username == "guest"){echo "style='display: none;'";}?>>
                       <input type="hidden" name="image" value="<?php echo $pic['image_name'];?>">
                       <article class="media">
                         <div class="media-content">
@@ -150,14 +157,14 @@ require ("./sessionRedirect.php");
                               <textarea class="textarea" name="comment" placeholder="Add a comment..."></textarea>
                             </p>
                           </div>
-                          <nav class="level">
+                          <nav class="level is-grouped">
                             <div class="level-left">
                               <div class="level-item">
-                                <button name="comment-btn" class="button is-small is-primary is-light"
-                                  value="OK">comment</button>
-                              </div>
-                              <div class="level-item">
-                                <button name="like-btn" class="button is-small is-primary is-light" value="1">
+                                <button name="comment-btn" class="button is-primary is-light is-small "
+                                  value="OK" style="margin-right:25px;">comment
+                                </button>
+
+                                <button style="padding-left:10px;"name="like-btn" class="button is-small is-primary is-light" value="1">
                                   <span style="padding-right:10px;" class="icon is-small">
                                     <i class="fas fa-heart"></i>
                                   </span> like <?php

@@ -34,10 +34,10 @@ require ("./sessionRedirect.php");
 	}
 
 	//Deleting images from database
-	if(isset($_GET['delete-btn']) && !empty($_GET['imageData']))
+	if(isset($_POST['delete-btn']) && !empty($_POST['imageData']))
 	{	
 		$imageID = 0;
-		$imageName = $user->test_input($_GET['imageData']);
+		$imageName = $user->test_input($_POST['imageData']);
 		$imageIdArr = $user->getImageId($imageName);
 		$imageID = $imageIdArr['image_id']; 
 		
@@ -120,7 +120,7 @@ require ("./sessionRedirect.php");
 										</figure>
 									</div>
 									<div class="card-content">
-										<form action="<?php echo $_SERVER['PHP_SELF']?>" name="delete-image" method="GET">
+										<form action="<?php echo $_SERVER['PHP_SELF']?>" name="delete-image" method="post">
                               				<input type="hidden" id="image" name="imageData" value="<?php echo $pic['image_name'];?>">
 											<button type="submit" class="button is-info is-inverted" name="delete-btn" value=OK>Delete Image</button>
 										</form>

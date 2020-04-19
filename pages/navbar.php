@@ -4,7 +4,7 @@
 		<a class="navbar-item" href="home.php">
 			<img src="../media/logo/Logo.png" alt="Camagru Logo" width="70" style="max-height:100%;">
 		</a>
-		<label style="padding-top:22px;">
+		<label style="padding-top:22px; padding-right:15px">
 			<?php echo "$username" ?>
 		</label>
 
@@ -16,7 +16,11 @@
 
 	</div>
 	<div id="navMenu" class="navbar-menu">
-		<div class="navbar-start">
+		<div class="navbar-start" <?php if($username == "guest"){
+			echo "style='display: none;'";}?>>
+			<a class="navbar-item" href="home.php">
+				Home
+			</a>
 			<a class="navbar-item" href="gallery.php">
 				Gallery
 			</a>
@@ -37,7 +41,7 @@
 						</span>
 						<span>Log out</span></a>";
     	          	else 
-						echo "<a class='navbar-item has-text-grey' href='../index.php'>
+						echo "<a class='navbar-item has-text-grey' href='home.php?logout=true'>
 						<span class='icon'>
 							<i class='fas fa-sign-in-alt'></i>
 					 	</span>

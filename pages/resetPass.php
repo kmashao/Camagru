@@ -40,7 +40,7 @@
 
                     mail($email, $subject, $message, $headers);
 
-                    $user->redirect('./login.php?joined');
+                    $user->redirect('login.php');
                 }
             }catch(PDOException $exception){
                 echo 'Error : '.$exception->getMessage();
