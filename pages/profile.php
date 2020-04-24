@@ -5,6 +5,7 @@ require_once("./sessionRedirect.php");
 
 $user = new User();
 $username = $_SESSION['user_session'];
+$notifications = $_SESSION['notifications'];
 $conn = getConn();
 
 		$stmt = $user->query("SELECT * FROM users WHERE username=:username LIMIT 1");
@@ -23,13 +24,45 @@ $conn = getConn();
 			$newEmail = $user->test_input($_POST['email']);
 			$newPassword = $user->test_input($_POST['newPassword']);
 			$confirmPassword = $user->test_input($_POST['confirmPassword']);
-
-			if(!filter_var($email, FILTER_VALIDATE_EMAIL))	{
+			if(isset($_POST['notifications']) && $_POST['notifications'] == "Yes"){
+				$notifications = "Yes";
+				$_SESSION['notifications'] = "Yes";
+			}else{
+				$notifications = "No";
+				$_SESSION['notifications'] = "No";
+			}
+			
+			if(empty($newEmail)){
+				$newEmail = $email;
+			}
+			if(empty($newUsername)){
+				$newUsername = $username;
+			}
+			if(strlen($newEmail) > 0 && !filter_var($newEmail, FILTER_VALIDATE_EMAIL))	{
 				$error = 'Please enter a valid email address';
 			}
 			else if (strlen($newPassword) > 0 && strlen($newPassword) < 6){
 				$error = 'Password must be atleast 6 characters long';
+			}else if(strlen($newPassword) > 0 && ($newPassword != $confirmPassword)){
+				$error = 'Passwords do not match';
+			}else{
+
+				if(strlen($newPassword) > 0){
+					$user->updatePassword($username,$newPassword);
+				}
+				$user->updateDetails($username,$newUsername,$newEmail,$notifications);
+				$success = "User details updated";
+				$headers = 'From:noreply@camagru.com' . "\r\n";
+				$mail = "
+				Good day $firstName $lastName
+				you have updated some of your information on you profile
+				if it wasn't you, consider changing your password.";
+
+				mail($email,"Account Details",$mail,$headers);
+				$_SESSION['user_session'] = $newUsername;
+				$user->redirect("profile.php");
 			}
+			
 		}
 ?>
 
@@ -49,6 +82,23 @@ $conn = getConn();
 	<?php include_once "navbar.php" ?>
 	<div id="body-container" class="container is-fullhd">
 		<section class="section is-fullwidth">
+		<div class="container">
+			<?php
+				if(isset($success)){
+					echo"<div class='modal'>
+					<div class='modal-background'></div>
+					<div class='modal-content'>
+					  <div class='box'>
+						<p class='text is-2 has-text-primary'>" . $success. "</p>
+					  </div>
+					</div>
+					<button class='modal-close is-large' aria-label='close'></button>
+				  </div>
+				  <script src='../js/modal.js'></script>";
+				}
+			?>
+			
+			</div>
 			<section class="hero is-light">
 				<div class="hero-body">
 					<div class="container">
@@ -91,7 +141,7 @@ $conn = getConn();
 						</div>
 						<div id="prof-form-div"class="tile is-parent">
 							<div class="tile is-child">
-								<form action="./profile.php" method="post">
+								<form action="<?php $_SERVER['PHP_SELF']?>" method="post">
 									<div class="container">
 										<div class="field">
 											<label class="label">Username</label>
@@ -119,8 +169,8 @@ $conn = getConn();
 											<label class="label">Enter new password</label>
 											<div class="control has-icons-left has-icons-right">
 												<input class="input is-primary" type="password" name="newPassword"
-													placeholder="enter new password" value="" autocomplete="off"
-													pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*" required>
+													placeholder="enter new password" autocomplete="off"
+													pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*">
 												<span
 													class="help is-danger"><?php if (isset($error)) echo $error;?></span>
 												<span class="icon is-small is-left">
@@ -132,15 +182,22 @@ $conn = getConn();
 												<label class="label">Confirm password</label>
 												<div class="control has-icons-left has-icons-right">
 													<input class="input is-primary" type="password"
-														name="confrimPassword" placeholder="re-enter new password"
+														name="confirmPassword" placeholder="re-enter new password"
 														value="" pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*"
-														required>
+														>
 													<span
 														class="help is-danger"><?php if (isset($error)) echo $error;?></span>
 													<span class="icon is-small is-left">
 														<i class="fas fa-lock"></i>
 													</span>
 												</div>
+											</div>
+											<div class="field">
+											<label class="checkbox">
+												<input type="checkbox" name="notifications"
+												value="Yes" <?php if($notifications == "Yes") echo "checked"?>>
+													notifications.
+											</label>
 											</div>
 
 											<div>
@@ -159,7 +216,7 @@ $conn = getConn();
 			</section>
 		</section>
 	</div>
-	<?php include("./footer.php"); ?>
+	<?php include("footer.php"); ?>
 </body>
 
 </html>

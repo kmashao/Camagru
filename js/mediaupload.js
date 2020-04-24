@@ -2,13 +2,6 @@ var canvas = document.getElementById('vid-canvas');
 var context = canvas.getContext('2d');
 var video = document.querySelector('video');
 
-// document.getElementById('vid-take').addEventListener('click', function(event){ 
-//     document.getElementById('canvas').style.display = 'inline';
-//     document.getElementById('save-btn').style.display = "inline";
-// });
-
-
-
 function add_sticker(sticker_src)
 {
     var imageObj = new Image();

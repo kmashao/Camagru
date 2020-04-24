@@ -64,7 +64,7 @@ require ("./sessionRedirect.php");
 
     //comment handler
     if(isset($_POST['comment-btn'])){
-      $comment = $user->test_input($_GET['comment']);
+      $comment = $user->test_input($_POST['comment']);
 
       if(empty($comment)){
         $commentErr = "comment cant be empty";
@@ -74,15 +74,34 @@ require ("./sessionRedirect.php");
       $stmt->execute();
       $images = $stmt->fetchAll();
       $image = $images[0];
+
+      //get user details from image
+      $stmt = $user->query("SELECT * FROM users WHERE username=:username");
+      $stmt->bindParam(":username", $image['username'], PDO::PARAM_STR);
+      $stmt->execute();
+      $details = $stmt->fetchAll();
+      $notification = $details[0];
+
+      // var_dump($notification);
+      // die();
       
-        //add comment to db
-        $stmt = $user->query("INSERT INTO comments(image_id, username, comment)
-              VALUES(:image_id, :username, :comment)");
-        $stmt->bindParam(":image_id",$image['image_id'], PDO::PARAM_STR);
-        $stmt->bindParam(":username",$username, PDO::PARAM_STR);
-        $stmt->bindParam(":comment", $comment, PDO::PARAM_STR);
-        $stmt->execute();
-        $user->redirect("home.php");
+      //send email notification
+      if($notification['notifications'] == "Yes" && $notification['username'] != $username){
+        $headers = 'From:noreply@camagru.com' . "\r\n";
+				$mail = "
+				Good day". $notification['username'] ."
+				$username commented on one of your posts.";
+
+				mail($notification['email'],"Post update",$mail,$headers);
+      }
+      //add comment to db
+      $stmt = $user->query("INSERT INTO comments(image_id, username, comment)
+            VALUES(:image_id, :username, :comment)");
+      $stmt->bindParam(":image_id",$image['image_id'], PDO::PARAM_STR);
+      $stmt->bindParam(":username",$username, PDO::PARAM_STR);
+      $stmt->bindParam(":comment", $comment, PDO::PARAM_STR);
+      $stmt->execute();
+      $user->redirect("home.php");
     }
   
 ?>
@@ -228,6 +247,7 @@ require ("./sessionRedirect.php");
     </section>
     <div class="push"></div>
   </div>
+  <?php var_dump($notification['email']) ?>
   <?php include "footer.php"?>
 </body>
 

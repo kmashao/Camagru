@@ -135,6 +135,6 @@ li{
 	overflow: auto;
 }
 
-.textarea{
-	height:20%;
+.textarea:not([rows]){
+	min-height: 100px;
 }

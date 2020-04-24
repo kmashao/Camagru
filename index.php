@@ -68,12 +68,12 @@ $user = new User();
 		        if (isset($userNameError) || isset($emailError)){
                     $user->redirect("index.php");
                 }
-                $hash = md5( rand(0,1000) );
+                $token = md5( rand(0,1000) );
 		        if($user->regUser($firstName, $lastName, $userName, $email, $password, $hash))
 		        {
                     $subject = "Camagru account confirmation";
                     $headers = 'From:noreply@camagru.com' . "\r\n";
-			        $link = "http://localhost:8080/Camagru/pages/verifyUser.php?id=" .$userName. "&key=" .$hash;
+			        $link = "http://localhost:8080/Camagru/pages/verifyUser.php?id=" .$userName. "&token=" .$token;
 			        $message = " 
                     Thanks for signing up!
                     Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below.

@@ -11,20 +11,20 @@ if ($user->loggedIn() ==  true)
 
 }	
 
-if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['key']))
+if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['token']))
 {
 	$username = $user->test_input($_GET['id']);
-	$key_hash = $_GET['key'];
+	$token = $_GET['token'];
 ;
 
 	$stmt = $user->query("SELECT username, token FROM users WHERE username=:username AND token=:token");
 	$stmt->bindParam(":username", $username, PDO::PARAM_STR);
-	$stmt->bindParam(":token", $key_hash, PDO::PARAM_STR);
+	$stmt->bindParam(":token", $token, PDO::PARAM_STR);
 	$stmt->execute();
 	$userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 	if ($stmt->rowCount() == 1)
 	{
-		$user->verifyEmail($username, $key_hash);
+		$user->verifyEmail($username, $token);
 		$user->redirect("login.php?verified");
 	
 	}

@@ -28,7 +28,8 @@ require_once ("../config/userclass.php");
 	    }
 	    else if($user->login($username, $password) == true)
 	    {
-		    $_SESSION['user_session'] = $username;
+            $_SESSION['user_session'] = $username;
+            $_SESSION['notifications'] = "Yes";
 		    $user->redirect('home.php');
 	    }
 	    else
