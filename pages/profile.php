@@ -39,7 +39,7 @@ $conn = getConn();
 				$newUsername = $username;
 			}
 			if(strlen($newEmail) > 0 && !filter_var($newEmail, FILTER_VALIDATE_EMAIL))	{
-				$error = 'Please enter a valid email address';
+				$emailError = 'Please enter a valid email address';
 			}
 			else if (strlen($newPassword) > 0 && strlen($newPassword) < 6){
 				$error = 'Password must be atleast 6 characters long';
@@ -159,6 +159,8 @@ $conn = getConn();
 											<div class="control has-icons-left has-icons-right">
 												<input class="input is-primary" name="email" type="email"
 													placeholder="Enter new email" value="">
+													<span
+													class="help is-danger"><?php if (isset($emailError)) echo $emailError;?></span>
 												<span class="icon is-small is-left">
 													<i class="fas fa-envelope"></i>
 												</span>
@@ -170,7 +172,8 @@ $conn = getConn();
 											<div class="control has-icons-left has-icons-right">
 												<input class="input is-primary" type="password" name="newPassword"
 													placeholder="enter new password" autocomplete="off"
-													pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*">
+													pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*"
+													title="make it strong 6 characters with Atleast one capital and small letter">
 												<span
 													class="help is-danger"><?php if (isset($error)) echo $error;?></span>
 												<span class="icon is-small is-left">
@@ -195,7 +198,7 @@ $conn = getConn();
 											<div class="field">
 											<label class="checkbox">
 												<input type="checkbox" name="notifications"
-												value="Yes" <?php if($notifications == "Yes") echo "checked"?>>
+												value="Yes" <?php if($_SESSION['notifications'] == "Yes") echo "checked"?>>
 													notifications.
 											</label>
 											</div>

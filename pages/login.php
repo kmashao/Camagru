@@ -29,7 +29,13 @@ require_once ("../config/userclass.php");
 	    else if($user->login($username, $password) == true)
 	    {
             $_SESSION['user_session'] = $username;
-            $_SESSION['notifications'] = "Yes";
+
+            $stmt = $user->query("SELECT * FROM users WHERE username=:username");
+            $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $details = $stmt->fetchAll();
+            $notification = $details[0];
+            $_SESSION['notifications'] = $notification['notifications'];
 		    $user->redirect('home.php');
 	    }
 	    else

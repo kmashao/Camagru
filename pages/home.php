@@ -21,9 +21,9 @@ require ("./sessionRedirect.php");
     $imagesPerPage = 6;
     $offset = ($pageno - 1) * $imagesPerPage;
   
-    $query = $user->query("SELECT image_name FROM images");
-      $query->execute();
-      $totalImages = $query->rowCount();
+    $stmt = $user->query("SELECT image_name FROM images");
+    $stmt->execute();
+    $totalImages = $stmt->rowCount();
     $totalPages = ceil($totalImages / $imagesPerPage);
     
     //retreives images users have  uploaded
@@ -81,9 +81,6 @@ require ("./sessionRedirect.php");
       $stmt->execute();
       $details = $stmt->fetchAll();
       $notification = $details[0];
-
-      // var_dump($notification);
-      // die();
       
       //send email notification
       if($notification['notifications'] == "Yes" && $notification['username'] != $username){
@@ -247,7 +244,6 @@ require ("./sessionRedirect.php");
     </section>
     <div class="push"></div>
   </div>
-  <?php var_dump($notification['email']) ?>
   <?php include "footer.php"?>
 </body>
 
