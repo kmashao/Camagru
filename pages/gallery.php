@@ -73,7 +73,7 @@ require ("./sessionRedirect.php");
 					<div class='modal-background'></div>
 					<div class='modal-content'>
 					  <div class='box'>
-						<p class='text is-2 has-text-primary'>" . $deleteMsg. "</p>
+						<p class='text is-2 has-text-primary'>" . $deleteMsg . "</p>
 					  </div>
 					</div>
 					<button class='modal-close is-large' aria-label='close'></button>
