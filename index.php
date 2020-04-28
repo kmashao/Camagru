@@ -4,7 +4,7 @@ require ("./config/userclass.php");
 $user = new User();
 
     if($user->loggedIn() == true){
-        $user->redirect("./pages/home.php");
+        $user->redirect("pages/home.php");
     }
 
     if(isset($_POST['register-btn'])) {
@@ -15,13 +15,16 @@ $user = new User();
     $password = $user->test_input($_POST['password']);
     $confirmPassword = $user->test_input($_POST['confirmPassword']);
 
-    if (!preg_match("/\s/",$firstName)) {
-        $firstNameError = "Only letters allowed";}
+    if (!preg_match("/^(?=.{3,20})[A-Za-z]+([\ A-Za-z][A-Za-z]+)*/",$firstName)) {
+        $firstNameError = "Enter valid name";
     }
-    else if (!preg_match("/\s/",$lastName)) {
-        $lastNameError = "Only letters allowed";
+    else if (!preg_match("/^(?=.{3,20})[A-Za-z]+([\ A-Za-z][A-Za-z]+)*/",$lastName)) {
+        $lastNameError = "Enter a valid name";
     }
-    else if (!preg_match("#.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password)) {
+    else if (!preg_match("/^(?=.{3,20})\w+/",$userName)) {
+        $userNameError = "enter a valid username";
+    }
+    else if (!preg_match("/.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/",$password)) {
         $passwordError = "password too weak";
     }
     else if (empty($firstName)){
@@ -39,7 +42,7 @@ $user = new User();
     else if(!filter_var($email, FILTER_VALIDATE_EMAIL))	{
         $emailError = 'Please enter a valid email address';
     }
-    else if(empty($password))	{
+    else if(empty($password)){
         $passwordError = "Please provide a password";
     }
     else if(strlen($password) < 6){
@@ -66,9 +69,9 @@ $user = new User();
 	        }
 	        else
 	        {
-		        if (isset($userNameError) || isset($emailError)){
-                    $user->redirect("index.php");
-                }
+		        // if (isset($userNameError) || isset($emailError)){
+                //     $user->redirect("index.php");
+                // }
                 $token = md5( rand(0,1000) );
 		        if($user->regUser($firstName, $lastName, $userName, $email, $password, $token))
 		        {
@@ -81,7 +84,6 @@ $user = new User();
                      
                     ------------------------
                     Username: '.$userName.'
-                    Password: '.$password.'
                     ------------------------
                      
                     Please click this link to activate your account:'.
@@ -96,6 +98,7 @@ $user = new User();
             echo $exception->getMessage();
         }
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -129,9 +132,9 @@ $user = new User();
                                 <label class="label">First name</label>
                                 <div class="control has-icons-left">
                                     <input class="input is-primary" type="text" name="firstName"
-                                        placeholder="Enter name" value="" pattern='[a-zA-Z\-]+'
+                                        placeholder="Enter name" value=""
                                         title="Enter letters only" required>
-                                    <span class="help is-danger"><?php if (isset($firstNameError)) echo $error;?></span>
+                                    <span class="help is-danger"><?php if (isset($firstNameError)) echo $firstNameError;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                     </span>
@@ -142,9 +145,9 @@ $user = new User();
                                 <label class="label">Last name</label>
                                 <div class="control has-icons-left">
                                     <input class="input is-primary" type="text" name="lastName"
-                                        placeholder="Enter last name" value="" pattern='[a-zA-Z\-]+'
+                                        placeholder="Enter last name" value=""
                                         title="Enter letters only" required>
-                                    <span class="help is-danger"><?php if (isset($lastNameError)) echo $error;?></span>
+                                    <span class="help is-danger"><?php if (isset($lastNameError)) echo $lastNameError;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                     </span>
@@ -155,9 +158,9 @@ $user = new User();
                                 <label class="label">Username</label>
                                 <div class="control has-icons-left">
                                     <input class="input is-success" type="text" name="userName"
-                                        placeholder="Enter public name" value="" pattern="\w+"
+                                        placeholder="Enter public name" value=""
                                         title="Enter letters and symbols" required>
-                                    <span class="help is-danger"><?php if (isset($userNameError)) echo $error;?></span>
+                                    <span class="help is-danger"><?php if (isset($userNameError)) echo $userNameError;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                     </span>
@@ -170,7 +173,7 @@ $user = new User();
                                 <div class="control has-icons-left">
                                     <input class="input is-primary" type="email" name="email"
                                         placeholder="enter email address" value="" required>
-                                    <span class="help is-danger"><?php if (isset($error)) echo $emailError;?></span>
+                                    <span class="help is-danger"><?php if (isset($emailError)) echo $emailError;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-envelope"></i>
                                     </span>
@@ -183,7 +186,7 @@ $user = new User();
                                     <input class="input is-primary" type="password" minlength="6" name="password"
                                         placeholder="enter password" value=""
                                         title="Enter a strong password with 6 or more characters" required>
-                                    <span class="help is-danger"><?php if (isset($error)) echo $passwordError;?></span>
+                                    <span class="help is-danger"><?php if (isset($passwordError)) echo $passwordError;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-lock"></i>
                                     </span>
@@ -195,9 +198,8 @@ $user = new User();
                                 <div class="control has-icons-left has-icons-right">
                                     <input class="input is-primary" type="password" minlength="6" name="confirmPassword"
                                         placeholder="confirm password" value=""
-                                        title="Re-enter your password"
-                                        required>
-                                    <span class="help is-danger"><?php if (isset($confirmPassErr)) echo $error;?></span>
+                                        title="Re-enter your password" required>
+                                    <span class="help is-danger"><?php if (isset($confirmPassErr)) echo $confirmPassword;?></span>
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-lock"></i>
                                     </span>
@@ -206,7 +208,7 @@ $user = new User();
                             </div>
 
                             <div class="control">
-                                <button class="button is-link" name="register-btn">Register</button>
+                                <button class="button is-primary" name="register-btn">Register</button>
                             </div>
 
                             <p style="padding-top: 20px">

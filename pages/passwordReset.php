@@ -15,7 +15,7 @@ if (isset($_POST['reset-btn']))
     $confirmPass = $user->test_input($_POST['confirmPassword']);
 
     
-    if(!preg_match("#.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$newPassword)) {
+    if(!preg_match("/.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/",$newPassword)) {
         $passwordError = "password too weak";
     }
     else if($confirmPass != $newPassword){
