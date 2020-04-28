@@ -15,24 +15,24 @@ if (isset($_POST['reset-btn']))
     $confirmPass = $user->test_input($_POST['confirmPassword']);
 
     
-    if(strlen($password) < 6){
-        $error = "Password must be atleast 6 characters";
+    if(!preg_match("#.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$newPassword)) {
+        $passwordError = "password too weak";
     }
     else if($confirmPass != $newPassword){
         $error = "Passwords don't match";
     }
-    if (isset($_GET['id']) && isset($_GET['key']))
+    else if (isset($_GET['id']) && isset($_GET['token']))
     {
     	$username = $user->test_input($_GET['id']);
-    	$key_hash = $_GET['key'];
+    	$token = $_GET['token'];
     
-    	$stmt = $user->query("SELECT username, email, 'password' FROM users WHERE username=:username");
+    	$stmt = $user->query("SELECT token FROM users WHERE username=:username");
     	$stmt->bindParam(":username", $username, PDO::PARAM_STR);
     	$stmt->execute();
     	$userRow = $stmt->fetch(PDO::FETCH_ASSOC);
     	if ($stmt->rowCount() == 1)
     	{
-    		if(hash("whirlpool", $userRow['email']) == $key_hash)
+    		if($userRow['token'] == $token)
     		{
     			$user->changePass($username, $newPassword);
     			$user->redirect("login.php");
@@ -80,9 +80,8 @@ if (isset($_POST['reset-btn']))
                         <label class="label">Enter new password</label>
                         <div class="control has-icons-left has-icons-right">
                             <input class="input is-primary" type="password" name="newPassword"
-                                placeholder="enter new password" value="" pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*"
-                                required>
-                            <span class="help is-danger"><?php if (isset($error)) echo $error;?></span>
+                                placeholder="enter new password" value="" required>
+                            <span class="help is-danger"><?php if (isset($passwordError)) echo $passwordError;?></span>
                             <span class="icon is-small is-left">
                                 <i class="fas fa-lock"></i>
                             </span>
@@ -92,9 +91,8 @@ if (isset($_POST['reset-btn']))
                     <div class="field">
                         <label class="label">Confirm password</label>
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input is-primary" type="password" name="confrimPassword"
-                                placeholder="re-enter new password" value=""
-                                pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*" required>
+                            <input class="input is-primary" type="password" name="confirmPassword"
+                                placeholder="re-enter new password" value="" required>
                             <span class="help is-danger"><?php if (isset($error)) echo $error;?></span>
                             <span class="icon is-small is-left">
                                 <i class="fas fa-lock"></i>

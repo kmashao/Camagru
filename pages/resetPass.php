@@ -12,24 +12,22 @@
         }
         else{
             try{                
-                $stmt = $user->query("SELECT `username`, `email` FROM users WHERE `email`=:email");
+                $stmt = $user->query("SELECT `username`, `email`, `token` FROM users WHERE `email`=:email");
                 $stmt->execute(array(':email'=>$email));
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
                 if ($stmt->rowCount() >= 1)
                 {
                     $username = $row['username'];
-
-                    $hash = hash("whirlpool", $email);
                     $subject = "Password Reset";
                     $headers = 'From:noreply@camagru.com' . "\r\n";
-                    $link = "http://localhost:8080/Camagru/pages/passwordReset.php?id=$username&key=$hash";
+                    $link = "http://localhost:8080/Camagru/pages/passwordReset.php?id=$username&token=" . $row['token'];
                     $message = " 
                     Seems you have forgotten your password!
                     You can reset your account password by pressing the url below.
 
                     ------------------------
-                    Username: '.$username.'
+                    Username: $username
                     ------------------------
 
                     Please click this link to Reset your password'.

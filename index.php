@@ -18,12 +18,13 @@ $user = new User();
     if (!preg_match("/\s/",$firstName)) {
         $firstNameError = "Only letters allowed";}
     }
-
-    if (!preg_match("/\s/",$lastName)) {
+    else if (!preg_match("/\s/",$lastName)) {
         $lastNameError = "Only letters allowed";
     }
-
-    if (empty($firstName)){
+    else if (!preg_match("#.*^(?=.{6,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password)) {
+        $passwordError = "password too weak";
+    }
+    else if (empty($firstName)){
         $firstNameError = "Please provide your first name";
     }
     else if (empty($lastName)){
@@ -181,7 +182,6 @@ $user = new User();
                                 <div class="control has-icons-left has-icons-right">
                                     <input class="input is-primary" type="password" minlength="6" name="password"
                                         placeholder="enter password" value=""
-                                        pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*"
                                         title="Enter a strong password with 6 or more characters" required>
                                     <span class="help is-danger"><?php if (isset($error)) echo $passwordError;?></span>
                                     <span class="icon is-small is-left">
@@ -195,7 +195,7 @@ $user = new User();
                                 <div class="control has-icons-left has-icons-right">
                                     <input class="input is-primary" type="password" minlength="6" name="confirmPassword"
                                         placeholder="confirm password" value=""
-                                        pattern="(?=\S*\d)(?=\S*[a-z])(?=\S*[A-Z])\S*" title="Re-enter your password"
+                                        title="Re-enter your password"
                                         required>
                                     <span class="help is-danger"><?php if (isset($confirmPassErr)) echo $error;?></span>
                                     <span class="icon is-small is-left">
