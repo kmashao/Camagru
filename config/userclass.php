@@ -91,7 +91,7 @@ class User{
         }
     }
 
-    // change password
+    // change  password
     public function changePass($userName, $newPassword){
         try{
             $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -138,8 +138,7 @@ class User{
     //get image id
     public function getImageId($imageName){
         try{
-            $stmt = $this->query("SELECT image_id FROM images WHERE username=:username AND image_name=:imageName");
-            $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+            $stmt = $this->query("SELECT image_id FROM images WHERE image_name=:imageName");
             $stmt->bindParam(":imageName", $imageName, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -177,6 +176,57 @@ class User{
         catch(PDOException $exception){
             return false;
         }
+    }
+
+    //update user details
+    public function updateDetails($oldUsername,$username,$email,$notifications){
+        try{
+            $stmt = $this->query("UPDATE users SET username=:username, email=:email, notifications=:notifications
+            WHERE username=:oldUsername");
+            $stmt->bindParam("oldUsername", $oldUsername, PDO::PARAM_STR);
+            $stmt->bindParam("username",$username, PDO::PARAM_STR);
+            $stmt->bindParam("email",$email, PDO::PARAM_STR);
+            $stmt->bindParam("notifications",$notifications, PDO::PARAM_STR);
+            $stmt->execute();
+
+            //change username in posts
+            $stmt = $this->query("UPDATE images SET username=:username WHERE username=:oldUsername");
+            $stmt->bindParam("oldUsername",$oldUsername, PDO::PARAM_STR);
+            $stmt->bindParam("username",$username, PDO::PARAM_STR);
+            $stmt->execute();
+
+            //change username in posts
+            $stmt = $this->query("UPDATE likes SET username=:username WHERE username=:oldUsername");
+            $stmt->bindParam("oldUsername",$oldUsername, PDO::PARAM_STR);
+            $stmt->bindParam("username",$username, PDO::PARAM_STR);
+            $stmt->execute();
+
+            //change username in comments
+            $stmt = $this->query("UPDATE comments SET username=:username WHERE username=:oldUsername");
+            $stmt->bindParam("oldUsername",$oldUsername, PDO::PARAM_STR);
+            $stmt->bindParam("username",$username, PDO::PARAM_STR);
+            $stmt->execute();
+            return true;
+        }catch(PDOException $exception){
+            echo "error" . $exception->getMessage();
+            return false;
+        }
+    }
+    
+    //update user password
+    public function updatePassword($username,$newPassword)
+    {
+        try{
+            $hashed_password = password_hash($newPassword, PASSWORD_DEFAULT);
+            $stmt = $this->query("UPDATE users SET `password`=:passwd WHERE username=:username");
+            $stmt->bindParam("username", $username, PDO::PARAM_STR);
+            $stmt->bindParam("passwd",$hashed_password,PDO::PARAM_STR);
+            $stmt->execute();
+            return true;
+        }catch(PDOException $exception){
+            echo "error" . $exception->getMessage();
+        }
+        
     }
 
     public function query($sql_query){
