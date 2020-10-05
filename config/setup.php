@@ -88,7 +88,7 @@ try {
 	$conn->exec($image_table);
 
 } catch (PDOException $exception) {
-	echo("Failed to images table " . $exception->getMessage());
+	echo("Failed to create images table " . $exception->getMessage());
 }
 
 try {

@@ -42,8 +42,8 @@ class User{
             echo("Error registering user: " . $exception->getMessage());
         }
     }
-    //verify user email
-    public function verifyEmail($userName, $hash){
+    //verify user 
+    public function verifyUser($userName, $hash){
         try{
             $stmt = $this->query("UPDATE users SET verified = 'Yes' WHERE username=:username AND token=:token");
             $stmt->execute(array('username'=>$userName, 'token'=>$hash));
@@ -55,7 +55,7 @@ class User{
         }
     }
 
-    // check if email is verified
+    // check if user is verified
     public function isVerified($userName){
         $stmt = $this->query("SELECT * FROM users WHERE username=:userName");
         $stmt->bindParam(":userName", $userName, PDO::PARAM_STR);
@@ -148,10 +148,9 @@ class User{
     }
 
     //delete image for logged in user
-    public function deleteImage($userName, $imageId, $imageName){
+    public function deleteImage($userName, $imageId){
         try{
-            $stmt = $this->query("DELETE FROM images WHERE image_name=:imageName AND image_id=:imageId AND username=:userName");
-            $stmt->bindParam(":imageName", $imageName, PDO::PARAM_STR);
+            $stmt = $this->query("DELETE FROM images WHERE image_id=:imageId AND username=:userName");
             $stmt->bindParam(":imageId", $imageId, PDO::PARAM_STR);
             $stmt->bindParam(":userName", $userName, PDO::PARAM_STR);
             $stmt->execute();
@@ -195,7 +194,7 @@ class User{
             $stmt->bindParam("username",$username, PDO::PARAM_STR);
             $stmt->execute();
 
-            //change username in posts
+            //change username in likes
             $stmt = $this->query("UPDATE likes SET username=:username WHERE username=:oldUsername");
             $stmt->bindParam("oldUsername",$oldUsername, PDO::PARAM_STR);
             $stmt->bindParam("username",$username, PDO::PARAM_STR);
@@ -208,7 +207,7 @@ class User{
             $stmt->execute();
             return true;
         }catch(PDOException $exception){
-            echo "error" . $exception->getMessage();
+            echo "error couldn't update details" . $exception->getMessage();
             return false;
         }
     }
@@ -224,7 +223,8 @@ class User{
             $stmt->execute();
             return true;
         }catch(PDOException $exception){
-            echo "error" . $exception->getMessage();
+            echo "error couldn't update password" . $exception->getMessage();
+            return false;
         }
         
     }

@@ -24,7 +24,7 @@ if (isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['token']))
 	$userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 	if ($stmt->rowCount() == 1)
 	{
-		$user->verifyEmail($username, $token);
+		$user->verifyUser($username, $token);
 		$user->redirect("login.php?verified");
 	
 	}

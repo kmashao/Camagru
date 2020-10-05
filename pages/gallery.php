@@ -41,7 +41,7 @@ require ("./sessionRedirect.php");
 		$imageIdArr = $user->getImageId($imageName);
 		$imageID = $imageIdArr['image_id']; 
 		
-		if($user->deleteImage($username,$imageID, $imageName) && $imageID){
+		if($user->deleteImage($username,$imageID) && $imageID){
 			$deleteMsg = "Image successfully deleted";
 		}else{
 			$deleteMsg = null;
